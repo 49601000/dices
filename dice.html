@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ダイスロールシミュレーター</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        input, button {
+            font-size: 18px;
+            margin: 10px;
+            padding: 10px;
+        }
+        #result {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>ダイスロールシミュレーター</h1>
+    <p>ダイス表記を入力してください（例: 1d6, 2d10, 3d20）。面数は6から200まで対応。</p>
+    <input type="text" id="diceInput" placeholder="例: 1d6">
+    <button onclick="rollDice()">ロール</button>
+    <div id="result"></div>
+
+    <script>
+        function rollDice() {
+            const input = document.getElementById('diceInput').value.trim();
+            const resultDiv = document.getElementById('result');
+            
+            // 正規表現で入力チェック: XdY の形式
+            const match = input.match(/^(\d+)d(\d+)$/);
+            if (!match) {
+                resultDiv.textContent = '無効な入力です。例: 1d6 の形式で入力してください。';
+                return;
+            }
+            
+            const numDice = parseInt(match[1]);
+            const sides = parseInt(match[2]);
+            
+            if (sides < 6 || sides > 200) {
+                resultDiv.textContent = '面数は6から200までで入力してください。';
+                return;
+            }
+            
+            if (numDice < 1 || numDice > 100) { // ダイス数の上限を適当に設定
+                resultDiv.textContent = 'ダイス数は1から100までで入力してください。';
+                return;
+            }
+            
+            let total = 0;
+            let rolls = [];
+            for (let i = 0; i < numDice; i++) {
+                const roll = Math.floor(Math.random() * sides) + 1;
+                rolls.push(roll);
+                total += roll;
+            }
+            
+            resultDiv.innerHTML = `結果: ${rolls.join(' + ')} = <strong>${total}</strong>`;
+        }
+    </script>
+</body>
+</html>
